@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App Name</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-database.js"></script>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>   
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        .logIn {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logIn h2 {
+            color: #007BFF;
+            margin-bottom: 15px;
+        }
+        .logIn span {
+            display: block;
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .button{
+            text-align: center;
+        }
+        .buttons {
+            text-align: center;
+            display: flex;
+            flex: row;
+            flex-direction: space-between;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px dotted #00FF06;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 2s linear infinite;
+        }
+
+        @keyframes rotation {
+          0% {
+             transform: rotate(0deg);
+         }
+        100% {
+             transform: rotate(360deg);
+         }
+        }
+        .alert{
+            background-color: #39FF00;
+            border-radius: 20px;
+            border: none;
+            padding: 10px;
+            display: none;
+            
+        }
+        .contact{
+            background-color: #839FA2;
+            width: 100%;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        social-icons{
+        align-self: center;
+    align-content: center;
+}
+.social-icons a{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    background: transparent;
+    border: 2px solid red;
+    font-size: 2.5rem;
+    border-radius: 50%;
+    color: var(--main-color);
+    margin: 3rem 1.5rem 3rem 0;
+    transition: 0.3s ease-in-out;
+}
+.social-icons a:hover{
+    color: var(--text-color);
+    transform: scale(1.3)translateY(-5px);
+    box-shadow: 0 0 25px blue;
+    background-color: greenyellow;
+}
+        #DevForm {
+            border-radius: 20px;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #DevForm .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: red;
+            font-size: 16px;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+        }
+     #DevForm label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+#DevForm select,input,
+#DevForm textarea {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+#DevForm button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #ff8c00;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#DevForm button[type="submit"]:hover {
+  background-color: #ff6f00;
+}
+    </style>
+
+</head>
+<body>
+    <div class="container" id="contain">
+        <div class="loader"></div>
+        <div id="ff"><b id="a"></b></div><br /><br />
+        <div class="alert" id="alert">You are offline...</div>
+    </div>
+    <section id="online" style="display:none">
+        <div class="container" id="container">
+            <div id="access">
+                <div id="db">Welcome once more...</div><br />
+                <div class="button">
+                    <a href="appswebsite_url">
+                        <button id="ok">Proceed</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="offline" class="container" style="display:none">
+        <div class="button">
+            <button id="dev">About the developer</button>
+            <button id="app">About Your App</button>
+        </div>
+    </section>
+    
+    <section id="developer" class="container" style="display:none">
+        <h2>SmartTech IT Solutions</h2>
+        <p>This app was developed and maintained by <strong>SmartTech IT solutions</strong></p>
+        <br />
+        <h3>Services offered at SmartTech</h3>
+        <ul>
+            <li>Website development and management</li>
+            <li>Website designing and re-designing</li>
+            <li>SEO optimization</li>
+            <li>Android App development</li>
+            <li>Graphics Designing</li>
+            <li><strong>We also sell all Computer accessories!</strong></li>
+        </ul>
+        <em>NOTE:</em> We also offer courses to the services mentioned above.
+        <br /><br /><br />
+        <div class="contact">
+            <p>Feel free to contact us via these channels...</p>
+            <div class="social-icons">
+                <a href="https://wa.me/message/254113607660">
+                    <i class='bx bxl-whatsapp' aria-label="WhatsApp"></i>
+                </a>
+                <a href="https://t.me/josephsamwa">
+                    <i class='bx bxl-telegram' aria-label="Telegram"></i>
+                </a>
+                <a href="tel:254113607660"><i class="fas fa-phone" aria-label="Phone"></i></a>
+            </div>
+            <br />
+        </div>
+        <hr />
+        OR
+        <hr />
+        <br />
+        <div class="button">
+            <button id="msg">Send a direct message</button>
+        </div>
+
+        <div id="overlay"></div>
+        <div id="DevForm">
+            <span class="close-btn" id="closeDevForm">X</span>
+            <form name="DevForm" id="ContForm" method="POST" data-netlify="true">
+                <fieldset>
+                    <legend>Send a direct message</legend>
+                    <label for="Name">Name:</label>
+                    <input type="text" id="Name" name="Name" required>
+                    <label for="Email">Email:</label>
+                    <input type="email" id="DevEmail" name="Email" required>
+                    <label for="Phone">Phone:</label>
+                    <input type="tel" id="Phone" name="Phone" required>            
+                    <label for="message"><i class="fas fa-comment"></i> Message:</label>
+                    <textarea id="message" name="Message" required></textarea><br />
+                </fieldset>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="appinfo" class="container" style="display:none">
+        <p>More information about the app goes here...</p>
+    </section>
+    
+    <script type="text/javascript" charset="utf-8">
+        document.addEventListener('DOMContentLoaded', function() {
+            var text = `Welcome to the Your App Name official app.
+                        At Your App Name, serving you is our pleasure!`; 
+            const Alert = document.getElementById('alert');
+            const DevBt = document.getElementById('dev');
+            const AppBt = document.getElementById('app');
+            const MsgBt = document.getElementById('msg');
+
+            var word = text.split("");
+            var i = 0;
+            var interval = setInterval(writeText, 40);
+            function writeText() {
+                var p = document.getElementsByTagName("b")[0];
+                var ff = document.getElementById('ff');
+                if (i < word.length) {
+                    p.innerHTML += word[i];
+                    i++;
+                    if (i === word.length) {
+                        updateOnlineStatus();
+                    }
+                } else {
+                    clearInterval(interval);
+                    ff.style.backgroundColor = "lightblue";
+                    ff.style.padding = '10px';
+                    ff.style.borderRadius = '20px';
+                }
+            }
+
+            function updateOnlineStatus() {
+                if (navigator.onLine) {
+                    Alert.textContent = 'You are online';
+                    Alert.style.display = 'block';
+                    document.getElementById('offline').style.display = 'none';
+                    window.location.href = 'appswebsite_url';
+                } else {
+                    Alert.textContent = 'You are offline';
+                    Alert.style.display = 'block';
+                    document.getElementById('offline').style.display = 'block';
+                }
+            }
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            MsgBt.addEventListener('click', MsgFunc);
+            DevBt.addEventListener('click', DevFunc);
+            AppBt.addEventListener('click', AppFunc);
+
+            function DevFunc() {
+                document.getElementById('appinfo').style.display = 'none';
+                document.getElementById('developer').style.display = 'block';
+            }
+            
+            function AppFunc() {
+                document.getElementById('appinfo').style.display = 'block';
+                document.getElementById('developer').style.display = 'none';
+            }
+            function MsgFunc() {
+                document.getElementById('DevForm').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+            function Close() {
+                document.getElementById('DevForm').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+    document.getElementById('overlay').addEventListener('click' ,Close);
+    document.getElementById('closeDevForm').addEventListener('click' ,Close);
+    
+   /* document.getElementById('ContForm').addEventListener('submit',()=>{
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const message = document.getElementById('message').value;
+    alert('form submitted');
+    });*/
+            
+        });
+    </script>
+</body>
+</html>
